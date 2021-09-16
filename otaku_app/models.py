@@ -11,7 +11,7 @@ WSTRZYMANE = "Wstrzymane"
 
 CHOICES = (
     (NA_BIEZACO, "Na bieżąco"),
-    (W_TRAKCIE, "W trakacie"),
+    (W_TRAKCIE, "W trakcie"),
     (PORZUCONE, "Porzucone"),
     (SKONCZONE, "Skończone"),
     (PLANOWANE, "Planowane"),

@@ -31,7 +31,7 @@ def table_titles(request):
 @login_required
 def table_category(request, title_id):
     """Widok tablicy z kategoriami wybranego tytułu."""
-    title = Title.objects.get_object_or_404(id=title_id)
+    title = get_object_or_404(Title, id=title_id)
     _check_owner(title, request)
 
     categories = title.category_set.all().order_by('name')
@@ -45,7 +45,7 @@ def table_category(request, title_id):
 @login_required
 def table_subcategory(request, category_id):
     """Widok tablicy z podkategoriami wybranej kategorii wybranego tytułu."""
-    category = Category.objects.get_object_or_404(id=category_id)
+    category = get_object_or_404(Category, id=category_id)
     _check_owner(category, request)
 
     subcategories = category.subcategory_set.all().order_by('name')
@@ -85,7 +85,7 @@ def new_title(request):
 @login_required
 def new_category(request, title_id):
     """Dodaj nową kategorię dla danego tytułu."""
-    title = Title.objects.get_object_or_404(id=title_id)
+    title = get_object_or_404(Title, id=title_id)
     _check_owner(title, request)
 
     if request.method != "POST":
@@ -112,7 +112,7 @@ def new_category(request, title_id):
 @login_required
 def new_subcategory(request, category_id):
     """Dodaj nową podkategorię dla danej kategorii danego tytułu."""
-    category = Category.objects.get_object_or_404(id=category_id)
+    category = get_object_or_404(Category, id=category_id)
     _check_owner(category, request)
 
     if request.method != "POST":
@@ -143,7 +143,7 @@ def new_subcategory(request, category_id):
 @login_required
 def edit_title(request, title_id):
     """Edytuj istniejący tytuł."""
-    title = Title.objects.get_object_or_404(id=title_id)
+    title = get_object_or_404(Title, id=title_id)
     _check_owner(title, request)
 
     if request.method != 'POST':
@@ -166,7 +166,7 @@ def edit_title(request, title_id):
 @login_required
 def edit_category(request, category_id):
     """Edytuj istniejącą kategorię."""
-    category = Category.objects.get_object_or_404(id=category_id)
+    category = get_object_or_404(Category, id=category_id)
     _check_owner(category, request)
     title = category.title
 
@@ -191,7 +191,7 @@ def edit_category(request, category_id):
 @login_required
 def edit_subcategory(request, subcategory_id):
     """Edytuj istniejącą podkategorię."""
-    subcategory = Subcategory.objects.get_object_or_404(id=subcategory_id)
+    subcategory = get_object_or_404(Subcategory, id=subcategory_id)
     _check_owner(subcategory, request)
     category = subcategory.category
 
@@ -220,7 +220,7 @@ def edit_subcategory(request, subcategory_id):
 @login_required
 def delete_title(request, title_id):
     """Usuń istniejący tytuł."""
-    title = Title.objects.get_object_or_404(id=title_id)
+    title = get_object_or_404(Title, id=title_id)
     _check_owner(title, request)
 
     if request.method == "POST":
@@ -236,7 +236,7 @@ def delete_title(request, title_id):
 @login_required
 def delete_category(request, category_id):
     """Usuń istniejącą kategorię."""
-    category = Category.objects.get_object_or_404(id=category_id)
+    category = get_object_or_404(Category, id=category_id)
     _check_owner(category, request)
     title = category.title
 
@@ -254,7 +254,7 @@ def delete_category(request, category_id):
 @login_required
 def delete_subcategory(request, subcategory_id):
     """Usuń istniejącą podkategorię."""
-    subcategory = Subcategory.objects.get_object_or_404(id=subcategory_id)
+    subcategory = get_object_or_404(Subcategory, id=subcategory_id)
     _check_owner(subcategory, request)
     category = subcategory.category
 
