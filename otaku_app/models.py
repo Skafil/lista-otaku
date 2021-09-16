@@ -21,6 +21,7 @@ CHOICES = (
 class Title(models.Model):
     name = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=CHOICES)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = "Titles"
@@ -34,6 +35,7 @@ class Category(models.Model):
         blank=True)
     name = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=CHOICES)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = "Categories"
@@ -47,6 +49,7 @@ class Subcategory(models.Model):
         blank=True)
     name = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=CHOICES)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = "Subcategories"

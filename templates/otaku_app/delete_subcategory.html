@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class='box'>
+    <p>Jesteś pewien, że chcesz usunąć podkategorię '{{ subcategory }}'?</p>
+
+    <form action="{% url 'delete_subcategory' subcategory.id %}" method="POST">
+      {% csrf_token %}
+      <button name="submit" class="submit-button">Potwierdź</button>
+      <a href="{{request.META.HTTP_REFERER}}" class="return-button">
+        <span class='Centered'>Powrót</span>
+      </a>
+      <div style="clear: both;"></div>
+    </form>
+  </div>
+{% endblock content %}

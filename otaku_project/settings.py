@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+from django.contrib import messages
 from pathlib import Path
 import os
 import django_heroku
@@ -62,7 +62,11 @@ ROOT_URLCONF = 'otaku_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/otaku_app'),
+            os.path.join(BASE_DIR, 'templates/users'),
+            os.path.join(BASE_DIR, 'templates/errors'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,3 +145,25 @@ STATICFILES_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
+
+if os.environ.get('DEBUG') == 'True':
+    DEBUG = True
+elif os.environ.get('DEBUG') == 'False':
+    DEBUG = False
+
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
+# Adres url przekierowujący do strony logowania.
+LOGIN_URL = 'login'
+
+# Ustawienia do wysyłania wiadomości e-mail.
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="box">
+    <h3>Dodaj nową podkategorię dla kategorii '{{ category }}'</h3>
+
+    <form action="{% url 'new_subcategory' category.id %}" method='POST'>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button name='submit' class="submit-button">Dodaj podkategorię</button>
+      <a href="{{request.META.HTTP_REFERER}}" class="return-button">
+        <span class='Centered'>Powrót</span>
+      </a>
+      <div style="clear: both;"></div>
+    </form>
+  </div>
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}  
+  <div>
+    <table class='tablica'>
+      <th>Podkategoria</th>
+      <th>Status</th>
+      <th>Edytuj</th>
+      <th>Usuń</th>
+      {% for subcategory in subcategories %}
+        <tr>
+          <td>{{ subcategory.name }}</td>
+          <td>{{ subcategory.status }}</td>
+          <td>
+            <a href="{% url 'edit_subcategory' subcategory.id %}" class="highlight"><i class="icon-pencil"></i></a>
+          </td>
+          <td>
+            <a href="{% url 'delete_subcategory' subcategory.id %}" class="highlight"><i class="icon-trash-empty"></i></a>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr>
+        <td>
+          <a href="{% url 'new_subcategory' category.id %}" class="highlight">+ Dodaj nową podkategorię</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+{% endblock content %}

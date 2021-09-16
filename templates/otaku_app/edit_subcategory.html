@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class='box'>
+    <h3>Edytuj podkategorię '{{ subcategory }}'</h3>
+  
+    <form action="{% url 'edit_subcategory' subcategory.id %}" method='POST'>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button name="submit" class='submit-button'>Zapisz zmiany</button>
+      <a href="{{request.META.HTTP_REFERER}}" class="return-button">
+        <span class='Centered'>Powrót</span>
+      </a>
+      <div style="clear: both;"></div>
+    </form>
+  </div>
+{% endblock content %}

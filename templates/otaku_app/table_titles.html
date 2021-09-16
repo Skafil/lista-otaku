@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %} 
+  <div>
+    <table class="tablica">
+      <div>
+        <th>Tytuł</th>
+        <th>Status</th>
+        <th>Edytuj</th>
+        <th>Usuń</th>
+      </div>    
+      {% for title in titles %}
+        <div>
+          <tr>
+            <td>
+              <a href="{% url 'table_category' title.id %}" class="highlight">{{ title.name }}</a>
+            </td>
+            <td>{{ title.status }}</td>
+            <td>
+              <a href="{% url 'edit_title' title.id %}" class="highlight"><i class="icon-pencil"></i></a>
+            </td>
+            <td>
+              <a href="{% url 'delete_title' title.id %}" class="highlight"><i class="icon-trash-empty"></i></a>
+            </td>
+          </tr>
+        </div>
+      {% endfor %}
+      <div>
+        <tr>
+          <td>
+            <a href="{% url 'new_title' %}" class="highlight">+ Dodaj nowy tytuł</a>
+          </td>
+        </tr>
+      </div>
+    </table>
+  </div>
+{% endblock content %}

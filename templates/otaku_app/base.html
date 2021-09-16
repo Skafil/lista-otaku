@@ -1,0 +1,68 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+
+  <link href="{% static 'fontello_icons/css/fontello.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'images/favicon.ico' %}" rel="icon" type="image/x-icon" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Lato:ital@1&display=swap" rel="stylesheet">
+  
+  <title>Otaku list</title>
+
+</head>
+
+<body>
+
+  <div class="topbar">
+    {% if user.is_authenticated %}
+    <div class="topbarL-user" style="float: left; cursor: default;">
+      <span class='Centered'>Witaj, {{ user.username }}! |</span>
+    </div>
+    <div class="topbarL">
+      <a href="{% url 'table_titles' %}">
+        <span class='Centered'>Lista</span>
+      </a>
+    </div>
+
+    <div class="topbarR">
+      <a href="{% url 'logout_view' %}">
+        <span class='Centered'>Wyloguj</span>
+      </a>
+    </div>
+    <div style="clear: both;"></div>
+    {% else %}
+      <div>
+      <a href="{% url 'register' %}" class="topbarR">
+        <span class='Centered'>Rejestracja</span>
+      </a>
+    </div>
+
+    <div>
+      <a href="{% url 'login' %}" class="topbarR">
+        <span class='Centered'>Logowanie</span>
+      </a>
+    </div>
+    <div style="clear: both;"></div>
+    {% endif %}
+  </div>
+
+  <div class='logo'>
+    <a href="{% url 'table_titles' %}"><h1>Otaku lista</h1></a>
+  </div>
+
+  <main role="main">
+    <div>
+      {% block page_header %}{% endblock page_header %}
+    </div>
+    <div>
+      {% block content %}{% endblock content %}
+    </div>
+  </main>
+</body>
+</html>

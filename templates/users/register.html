@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="box">
+    <h3>Zarejestruj się</h3>
+
+    <form action="{% url 'register' %}" method="POST">
+
+      {% csrf_token %}
+      {% include '_messages.html' %}
+      <div class='input-space'>
+        <input 
+          type="text" 
+          name="username" 
+          id="usernameField"
+          placeholder="Wprowadź nazwę użytkownika"
+          value="{{ fieldValues.username }}" />
+      </div>
+      <div class='invalid-feedback' style="
+        display: none;
+        color: red;">  
+      
+      </div>
+      <p class="usernameSuccessOutput"></p>
+      <div class='input-space'>
+        <input 
+          type="email" 
+          name="email" 
+          id="emailField" 
+          placeholder="Wprowadź adres e-mail"
+          value="{{ fieldValues.email }}" />
+      </div>
+      <div class='emailFeedBackArea' style="
+        display: none;
+        color: red;">  
+      
+      </div>
+
+      <div class='input-space'>
+        <input 
+          type="password" 
+          name="password" 
+          id="passwordField"
+          placeholder="Wprowadź hasło"
+          style="margin-bottom: 5px;" />
+        <div>
+          <small class="showPasswordToggle">Pokaż</small>
+        </div>
+      </div>
+      <div style="clear: both;"></div>
+
+      <input type="submit" value="Zarejestruj" class="input-submit"/>
+
+    </form>
+  </div>
+
+  <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+
+{% endblock content %}

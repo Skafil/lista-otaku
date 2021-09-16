@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="box">
+    <h3>Zaloguj się</h3>
+
+    <form action="{% url 'login' %}" method="POST">
+
+      {% csrf_token %}
+      {% include '_messages.html' %}
+      <div class='input-space'>
+        <input 
+          type="text" 
+          name="username" 
+          id="usernameField"
+          placeholder="Wprowadź nazwę użytkownika"
+          value="{{ fieldValues.username }}" />
+      </div>
+
+      <div class='input-space'>
+        <input 
+          type="password" 
+          name="password" 
+          id="passwordField"
+          placeholder="Wprowadź hasło"
+          style="margin-bottom: 5px;" />
+        <div>
+          <small class="showPasswordToggle">Pokaż</small>
+        </div>
+      </div>
+      <div style="clear: both;"></div>
+
+      <input type="submit" value="Zaloguj" class="input-submit"/>
+
+    </form>
+    <div class="reset_button" style="margin-top: 8px;">
+      <a href="{% url 'request-password' %}">Zapomniałeś hasła?</a>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+{% endblock content %}
