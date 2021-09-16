@@ -1,0 +1,1 @@
+web gunicorn otaku_project.wsgi:apllication --log-file -
