@@ -288,6 +288,9 @@ input:focus{
         width: 35%;
         font-size: 11px;
     }
+    .info ul {
+        text-align: left;
+    }
 
     /* Tło do tablic oraz formularzy. */
 
