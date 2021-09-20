@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from django.contrib import messages
 from pathlib import Path
 import os
-import django_heroku
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -144,6 +142,7 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+import django_heroku
 django_heroku.settings(locals())
 
 if os.environ.get('DEBUG') == 'True':
@@ -154,6 +153,8 @@ elif os.environ.get('DEBUG') == 'False':
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
+    messages.SUCCESS: 'success',
+    messages.INFO: 'information',
 }
 
 # Adres url przekierowujący do strony logowania.

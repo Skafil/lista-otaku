@@ -247,6 +247,14 @@ input:focus{
     display: inline-block;
 }
 
+/* Style do wiadomości */
+.danger {
+    color: red;
+}
+
+.success {
+    color: greenyellow;
+}
 
 
 /* Dla telefonu */

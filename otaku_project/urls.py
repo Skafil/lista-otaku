@@ -50,6 +50,7 @@ urlpatterns = [
 
     # Linki do aplikacji users.
     path('register', RegistrationView.as_view(), name="register"),
+    # 'csrf_exempt' zapobiega skryptowaniu między witrynami(?). Wyklucza z tego.
     path('validate-username', csrf_exempt(UsernameValidationView.as_view()),
         name='validate-username'),
     path('validate-email', csrf_exempt(EmailValidationView.as_view()), 

@@ -13,9 +13,10 @@ from django.urls import reverse
 from .utils import account_activation_token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
+from otaku_project import settings
 
 class EmailThread(threading.Thread):
-    """Przyśpiesz wysyłanie wiadomości e-mail."""
+    """Przyśpiesza wysyłanie wiadomości e-mail poprzez użycie wątków."""
     def __init__(self, email):
         self.email = email
         threading.Thread.__init__(self)
@@ -24,14 +25,14 @@ class EmailThread(threading.Thread):
         self.email.send(fail_silently=False)
 
 class UsernameValidationView(View):
-    """ Widok sprawdzania poprawności nazwy użytkownika."""
+    """Sprawdź poprawność nazwy użytkownika."""
     def post(self, request):
         # Pobierz dane z formularza i umieść je w zmiennych.
         data = json.loads(request.body)
         username = data['username']
 
         # Sprawdź, czy nazwa użytkownika zawiera tylko litery oraz cyfry.
-        # Jeśli nie - wyświetl błąd.
+        # Jeśli nie - wyświetl błąd i ustaw status strony na 400.
         if not str(username).isalnum():
             return JsonResponse({
                 'username_error': 'Nazwa użytkownika może zawierac tylko litery i cyfry!'},
@@ -44,11 +45,11 @@ class UsernameValidationView(View):
                 status=409)
 
         # Jeżeli nazwa użytkownika jest poprawnie zapisana i nie jest zajęta,
-        # zwróć True.
+        # zatwierdź poprawność.
         return JsonResponse({'username_valid': True})
 
 class EmailValidationView(View):
-    """ Widok sprawdzania poprawności adresu e-mail."""
+    """Sprawdź poprawność adresu e-mail."""
     def post(self, request):
         # Pobierz dane z formularza i umieść je w zmiennych.
         data = json.loads(request.body)
@@ -66,54 +67,65 @@ class EmailValidationView(View):
                 'email_error': 'Ten adres e-mail jest już zajęty.'},
                 status=409)
 
-        if not email:
-            return JsonResponse({
-                'email_error': "Wpisz adres e-mail."},
-                status=400)
-
-        # Jeżeli nazwa użytkownika jest poprawnie zapisana i nie jest zajęta,
-        # zwróć True.
+        # Jeżeli adres e-mail jest poprawnie zapisany i nie jest zajęty,
+        # zatwierdź poprawność.
         return JsonResponse({'email_valid': True})
 
 
 class RegistrationView(View):
-    """ Widok rejestracji. """
+    """Widok rejestracji."""
     def get(self, request):
         context = {}
         return render(request, 'register.html', context)
 
     def post(self, request):
-        # Wyświetla komunikaty w zależności od wprowadzonych danych po 
-        # zatwierdzeniu.
-
-        #messages.success(request, "Success whatsapp success")
-        #messages.warning(request, "Success whatsapp warning")
-        #messages.info(request, "Success whatsapp info")
-        #messages.error(request, "Success whatsapp error")
         
         # Pobierz dane użytkownika.
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        password2 = request.POST.get('password2')
 
         context = {
             'fieldValues': request.POST,
         }
-        # Sprawdź, czy nazwa użytkownika i adres e-mail nie są zajęte oraz czy
-        # hasło zawiera conajmniej 8 znaków.
         try:
+            # Sprawdź, czy nazwa użytkownika istnieje.
             if not User.objects.filter(username=username).exists():
+                # Sprawdź czy adres e-mail istnieje. 
                 if not User.objects.filter(email=email).exists():
-                    if len(password) <= 7:
+                    # Sprawdź, czy pole nazwy użytkownika jest puste.
+                    if not username:
+                        messages.error(request, "Musisz podać nazwę użytkownika.")
+                        return render(request, 'register.html', context)
+
+                    # Sprawdź, czy pole adresu e-mail jest puste.
+                    if not email:
+                        messages.error(request, "Musisz podać adres e-mail.")
+                        return render(request, 'register.html', context)
+
+                    # Sprawdź, czy pole hasła jest puste.
+                    if not password:
+                        messages.error(request, "Musisz podać hasło.")
+                        return render(request, 'register.html', context)
+                    
+                    # Sprawdź, czy drugie pole hasła jest puste.
+                    if not password2 or password != password2:
+                        messages.error(request, "Podane hasła nie są takie same.")
+                        return render(request, 'register.html', context)
+
+                    # Sprawdź, czy hasło składa się z conajmniej 8 znaków.
+                    elif len(password) <= 7:
                         messages.error(request, "Hasło musi się składać z conajmniej 8 znaków.")
                         return render(request, 'register.html', context)
 
-                    # Stworz nieaktywowane konto użytkownika i wyślij wiadomość e-mail
-                    # z linkiem do aktywacji konta.
+                    # Stwórz nieaktywowane konto użytkownika.
                     user = User.objects.create_user(username=username, email=email)
                     user.set_password(password)
                     user.is_active = False
                     user.save()
+
+                    # Stwórz i wyślij wiadomość e-mail z linkiem aktywacyjnym.
                     current_site = get_current_site(request)
                     email_body = {
                         'user': user,
@@ -132,20 +144,21 @@ class RegistrationView(View):
                     email = EmailMessage(
                         email_subject,
                         'Witaj '+user.username + ',wejdź na poniższy link, by aktywować swoje konto \n'+activate_url,
-                        'listajam2021@gmail.com',
+                        settings.EMAIL_HOST_USER,
                         [email],
                     )
                     EmailThread(email).start()
-                    messages.success(request, 'Konto zostało stworzone. Na podany adres e-mail została wysłana wiadomość z linkiem aktywującym konto. Bez aktywacji konta nie będziesz mógł się zalogować.')
+                    messages.success(request, 'Konto zostało stworzone!')
+                    messages.info(request, 'Na podany adres e-mail została wysłana wiadomość z linkiem aktywującym konto. Bez aktywacji konta nie będziesz mógł się zalogować.')
                     return render(request, 'register.html', context)
+        
         except ValueError:
-            messages.error(request, "Nie wszystkie pola zostały wypełnione")
-            return render(request, 'register.html', context)
+            pass
 
         return render(request, 'register.html', context)
 
 class VerificationView(View):
-    """Widok z linku wysłaneog na e-mail. Aktywuje konto i przekierowuje na 
+    """Widok z linku wysłanego na e-mail. Aktywuje konto i przekierowuje na 
     stronę logowania."""
     def get(self, request, uidb64, token):
         try:
@@ -164,7 +177,7 @@ class VerificationView(View):
             user.is_active = True
             user.save()
 
-            messages.success(request, "Konto zostało aktywowane.")
+            messages.success(request, "Konto zostało aktywowane!")
             return redirect('login')
 
         except Exception as ex:
@@ -241,7 +254,7 @@ class RequestPasswordResetEmail(View):
             email = EmailMessage(
                 email_subject,
                 'Witaj, wejdź na podany poniżej link, by zresetować swoje hasło \n'+reset_url,
-                'listajam2021@gmail.com',
+                settings.EMAIL_HOST_USER,
                 [email],
             )
             EmailThread(email).start()
