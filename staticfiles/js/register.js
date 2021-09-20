@@ -46,7 +46,6 @@ showPasswordToggle.addEventListener('click', handleToggleInput);
 emailField.addEventListener('keyup', (e) => {
     const emailVal = e.target.value;
     emailSuccessOutput.style.display = "block";
-    emailSuccessOutput.textContent = `Sprawdzam ${emailVal}`;
     emailFeedBackArea.style.display = "none";
     emailField.style.boxShadow = "-1px 0px 24px -2px rgba(180, 180, 180, 0.71)"
 

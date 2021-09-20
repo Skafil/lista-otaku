@@ -151,11 +151,8 @@ class RegistrationView(View):
                     messages.success(request, 'Konto zostało stworzone!')
                     messages.info(request, 'Na podany adres e-mail została wysłana wiadomość z linkiem aktywującym konto. Bez aktywacji konta nie będziesz mógł się zalogować.')
                     return render(request, 'register.html', context)
-        
-        except ValueError:
+        except:
             pass
-
-        return render(request, 'register.html', context)
 
 class VerificationView(View):
     """Widok z linku wysłanego na e-mail. Aktywuje konto i przekierowuje na 
@@ -202,10 +199,6 @@ class LoginView(View):
                 if user.is_active:
                     auth.login(request, user)
                     return redirect('table_titles')
-
-                messages.error(request, "Konto nie jest aktywne. Sprawdź, czy"
-                    " otrzymałeś wiadomość e-mail z linkiem aktywacyjnym.")
-                return render(request, 'login.html')
 
             messages.error(request, "Nieprawidłowe dane. Spróbuj ponownie.")    
             return render(request, 'login.html')
